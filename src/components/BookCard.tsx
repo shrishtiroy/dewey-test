@@ -1,8 +1,10 @@
-
+import { useRatingContext } from "./contexts/RatingContext";
 import { useState } from "react";
 import { Star, Heart } from "lucide-react";
+import { useShelfContext } from "./contexts/ShelfContext";
 
 interface BookCardProps {
+  id: string;
   cover: string;
   title: string;
   author: string;
@@ -12,8 +14,29 @@ interface BookCardProps {
   isOnShelf?: boolean;
 }
 
-const BookCard = ({ cover, title, author, rating = 0, liked = false, isOnShelf = false, onToggleShelf}: BookCardProps) => {
-  const [isLiked, setIsLiked] = useState(liked);
+const BookCard = ({ id, cover, title, author, rating = 0, isOnShelf = false, onToggleShelf}: BookCardProps) => {
+  
+  const {addToShelf, removeFromShelf } = useShelfContext();
+  const { handleRatingCategory } = useRatingContext();
+  const [showCategoryPopup, setShowCategoryPopup] = useState(false);
+  
+  const [isLiked, setIsLiked] = useState(false);
+  const book = { id, title, author, cover };
+
+  const handleHeartClick = () => {
+    console.log("Heart clicked:", title);
+    if (isLiked) {
+      setIsLiked(false);
+    } else {
+      setShowCategoryPopup(true); 
+    }
+  };
+
+  const chooseCategory = (category: "love" | "like" | "hate") => {
+    setIsLiked(true);
+    setShowCategoryPopup(false);
+    handleRatingCategory(book, category);
+  };
   
   return (
     <div className="card group w-64 flex flex-col hover:shadow-xl transition-shadow duration-300">
@@ -26,7 +49,7 @@ const BookCard = ({ cover, title, author, rating = 0, liked = false, isOnShelf =
     />
     <button 
       className="absolute top-2 right-2 bg-white/80 hover:bg-white p-1.5 rounded-full"
-      onClick={() => setIsLiked(!isLiked)}
+      onClick={handleHeartClick}
     >
       <Heart 
         size={18} 
@@ -52,7 +75,22 @@ const BookCard = ({ cover, title, author, rating = 0, liked = false, isOnShelf =
 >
   {isOnShelf ? "Remove from Shelf" : "Add to Shelf"}
 </button>
+{showCategoryPopup && (
+  <div className="tie-popup-overlay">
+    <div className="tie-popup">
+      <h3>How do you feel about <strong>{title}</strong>?</h3>
+      <div className="tie-buttons">
+        <button onClick={() => chooseCategory("love")}>Love it</button>
+        <button onClick={() => chooseCategory("like")}>Like it</button>
+        <button onClick={() => chooseCategory("hate")}>Hate it</button>
+      </div>
+    </div>
+  </div>
+)}
+
 </div>
+
+
 
   );
 };

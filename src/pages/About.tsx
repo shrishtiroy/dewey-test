@@ -3,20 +3,23 @@ import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import angelaImage from "../images/Angela Website photo.jpeg";
+import dorisImage from "../images/Doris Website photo.jpeg";
+import missionVisionImg from "../images/Mission & Vision photo.jpg";
 
 const About = () => {
   const founderData = [
     {
-      name: "Angela B.",
+      name: "Doris Wang",
       role: "Co-Founder & CEO",
-      image: "https://i.pravatar.cc/300?img=29",
-      bio: "A lifelong reader with a background in tech and product management, Angela founded Dewey to create the book recommendation platform she always wanted.",
+      image: dorisImage,
+      bio: "An avid reader and media expert, Doris co-founded Dewey to build a platform that helps readers discover their next great book with the perfect blend of technology and personal insight."
     },
     {
-      name: "Michael L.",
-      role: "Co-Founder & CTO",
-      image: "https://i.pravatar.cc/300?img=59",
-      bio: "With expertise in AI and machine learning, Michael developed Dewey's recommendation algorithms to help readers discover their next favorite books.",
+      name: "Angela Malinovitch",
+      role: "Co-Founder & CSO",
+      image: angelaImage,
+      bio: "As a BookTok content creator and lover of all things books, Angela aims to connect people with the joy of reading through innovative recommendations and engaging social content.",
     },
   ];
   
@@ -37,12 +40,12 @@ const About = () => {
   
   const timeline = [
     {
-      year: "2023",
+      year: "2024",
       title: "The Idea",
       description: "Dewey was born from a simple question: why are book recommendations still so impersonal?",
     },
     {
-      year: "2024",
+      year: "2025",
       title: "Building the Team",
       description: "We assembled a team of book lovers, engineers, and designers passionate about transforming how people discover books.",
     },
@@ -81,7 +84,7 @@ const About = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+                  src={missionVisionImg}
                   alt="Person reading a book"
                   className="rounded-2xl shadow-xl w-full h-auto"
                 />

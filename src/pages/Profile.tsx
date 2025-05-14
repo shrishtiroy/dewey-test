@@ -35,29 +35,6 @@ const Profile = () => {
     },
   ];
   
-  const recentlyRead2 = [
-    {
-      cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400&auto=format&fit=crop",
-      title: "The Song of Achilles",
-      author: "Madeline Miller",
-      rating: 5,
-      liked: true,
-    },
-    {
-      cover: "https://images.unsplash.com/photo-1515098506762-79e1384e9d8e?w=400&auto=format&fit=crop",
-      title: "The Seven Husbands of Evelyn Hugo",
-      author: "Taylor Jenkins Reid",
-      rating: 4,
-      liked: true,
-    },
-    {
-      cover: "https://images.unsplash.com/photo-1711175555137-77d5728a91f0?w=400&auto=format&fit=crop",
-      title: "Circe",
-      author: "Madeline Miller",
-      rating: 5,
-      liked: true,
-    }
-  ];
 
   const [nextReadShelf, setNextRead] = useState([recentlyRead]);
   const handleAddToShelf = (book) => {
@@ -255,6 +232,7 @@ const Profile = () => {
                     {recentlyRead.map((book, index) => (
                       <BookCard
                         key={index}
+                        id = {book.id}
                         cover={book.cover}
                         title={book.title}
                         author={book.author}

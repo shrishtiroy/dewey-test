@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 import FeatureCard from "@/components/FeatureCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import BookCard from "@/components/BookCard";
+import bookshelfImg from "../images/bookshelf.jpg";
+import bookstoreImg from "../images/bookstore 2.jpg";
 
 const Index = () => {
   const [email, setEmail] = useState("");
@@ -188,6 +190,7 @@ const Index = () => {
             {popularBooks.map((book, index) => (
               <BookCard
                 key={index}
+                id = {book.title}
                 cover={book.cover}
                 title={book.title}
                 author={book.author}
@@ -246,27 +249,13 @@ const Index = () => {
                 Get Started Now
               </Link>
             </div>
-            
             <div className="w-full md:w-1/2 md:pl-10">
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+                  src={bookstoreImg}
                   alt="Dewey app on laptop and phone"
                   className="w-full rounded-2xl shadow-xl"
                 />
-                <div className="absolute -bottom-4 -right-4 bg-white p-3 rounded-xl shadow-lg w-32 hidden md:block">
-                  <div className="text-center">
-                    <p className="text-dewey-green font-bold">4.9/5</p>
-                    <div className="flex justify-center my-1">
-                      <Star className="h-4 w-4 text-dewey-green fill-dewey-green" />
-                      <Star className="h-4 w-4 text-dewey-green fill-dewey-green" />
-                      <Star className="h-4 w-4 text-dewey-green fill-dewey-green" />
-                      <Star className="h-4 w-4 text-dewey-green fill-dewey-green" />
-                      <Star className="h-4 w-4 text-dewey-green fill-dewey-green" />
-                    </div>
-                    <p className="text-xs">1,200+ Reviews</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

@@ -152,13 +152,14 @@ const Feed = () => {
               {
                 booksWithCovers.slice(0, 30).map((item, index) => {
                   return (
-                    <BookCard key = {index} cover={item.cover} title = {item.title} author={item.author?.join(", ")}
+                    <BookCard key = {index} id = {item.id} cover={item.cover} title = {item.title} author={item.author?.join(", ")}
                       isOnShelf={isOnShelf(item.title)}
                       onToggleShelf={() => {
                         isOnShelf(item.title)
                           ? removeFromShelf(item.title)
                           : addToShelf({
                               cover: item.cover,
+                              id: item.id,
                               title: item.title,
                               author: item.author?.join(", "),
                               rating: 0,
