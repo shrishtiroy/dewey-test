@@ -1,15 +1,16 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-interface Rating {
-  category: 'love' | 'like' | 'hate';
-  position: number;
-}
-
 interface Book {
   id: string;
   title: string;
   cover: string;
   author: string;
+}
+
+interface Rating {
+  category: 'love' | 'like' | 'hate' | 'dnf';
+  position: number;
+  book: Book;
 }
 
 interface PendingInsert {
@@ -25,7 +26,7 @@ interface RatingContextType {
   pendingInsert: PendingInsert | null;
   handleRatingCategory: (book: Book, category: Rating['category']) => void;
   resolveComparison: (preferred: 'more' | 'less') => void;
-  setRating: (bookId: string, category: Rating['category'], position: number) => void;
+  setRating: (bookId: string, book: Book, category: Rating['category'], position: number) => void;
   clearPendingInsert: () => void;
 }
 
@@ -41,15 +42,26 @@ export const RatingProvider = ({ children }: { children: ReactNode }) => {
   const [ratings, setRatings] = useState<Record<string, Rating>>({});
   const [pendingInsert, setPendingInsert] = useState<PendingInsert | null>(null);
 
-  const setRating = (bookId: string, category: Rating['category'], position: number) => {
-    setRatings(prev => ({ ...prev, [bookId]: { category, position } }));
+  const setRating = (bookId: string, book: Book, category: Rating['category'], position: number) => {
+    setRatings(prev => ({ ...prev, [bookId]: { book, category, position } }));
   };
 
   const handleRatingCategory = (book: Book, category: Rating['category']) => {
+    if(category == 'dnf'){
+      setRating(book.id, book, category, 1)
+      return;
+    }
+
     const sorted = Object.entries(ratings)
       .filter(([_, r]) => r.category === category)
       .sort(([, a], [, b]) => a.position - b.position)
       .map(([id]) => id);
+    
+    if (sorted.length === 0) {
+      // If no other books in that category, skip tie popup and just add
+      setRating(book.id, book, category, 0);
+      return;
+    }
 
     setPendingInsert({ book, category, low: 0, high: sorted.length, sortedIds: sorted });
   };
@@ -65,7 +77,7 @@ export const RatingProvider = ({ children }: { children: ReactNode }) => {
           newRatings[id] = { ...value, position: value.position + 1 };
         }
       }
-      newRatings[book.id] = { category, position: low };
+      newRatings[book.id] = { book, category, position: low };
       setRatings(newRatings);
       setPendingInsert(null);
       return;

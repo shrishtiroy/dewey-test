@@ -24,7 +24,6 @@ const BookCard = ({ id, cover, title, author, rating = 0, isOnShelf = false, onT
   const book = { id, title, author, cover };
 
   const handleHeartClick = () => {
-    console.log("Heart clicked:", title);
     if (isLiked) {
       setIsLiked(false);
     } else {
@@ -32,7 +31,7 @@ const BookCard = ({ id, cover, title, author, rating = 0, isOnShelf = false, onT
     }
   };
 
-  const chooseCategory = (category: "love" | "like" | "hate") => {
+  const chooseCategory = (category: "love" | "like" | "hate" | "dnf") => {
     setIsLiked(true);
     setShowCategoryPopup(false);
     handleRatingCategory(book, category);
@@ -76,17 +75,37 @@ const BookCard = ({ id, cover, title, author, rating = 0, isOnShelf = false, onT
   {isOnShelf ? "Remove from Shelf" : "Add to Shelf"}
 </button>
 {showCategoryPopup && (
-  <div className="tie-popup-overlay">
-    <div className="tie-popup">
-      <h3>How do you feel about <strong>{title}</strong>?</h3>
-      <div className="tie-buttons">
-        <button onClick={() => chooseCategory("love")}>Love it</button>
-        <button onClick={() => chooseCategory("like")}>Like it</button>
-        <button onClick={() => chooseCategory("hate")}>Hate it</button>
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+    <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
+      <h3 className="font-serif text-lg font-semibold mb-4">
+        How do you feel about <strong>{title}</strong>?
+      </h3>
+      <div className="grid grid-cols-1 gap-3">
+        <button
+          onClick={() => chooseCategory("love")}
+          className="border border-dewey-green text-dewey-green rounded-lg px-4 py-2 font-medium hover:bg-dewey-green hover:text-white transition-colors"
+        >Love it
+        </button>
+        <button
+          onClick={() => chooseCategory("like")}
+          className="border border-dewey-green text-dewey-green rounded-lg px-4 py-2 font-medium hover:bg-dewey-green hover:text-white transition-colors"
+        >Like it
+        </button>
+        <button
+          onClick={() => chooseCategory("hate")}
+          className="border border-dewey-green text-dewey-green rounded-lg px-4 py-2 font-medium hover:bg-dewey-green hover:text-white transition-colors"
+        >Dislike it
+        </button>
+        <button
+          onClick={() => chooseCategory("dnf")}
+          className="border border-dewey-green text-dewey-green rounded-lg px-4 py-2 font-medium hover:bg-dewey-green hover:text-white transition-colors"
+        >Didn't finish
+        </button>
       </div>
     </div>
   </div>
 )}
+
 
 </div>
 

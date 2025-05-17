@@ -4,10 +4,60 @@ import { Book, Bookmark, Heart, Star, Edit, Settings, Users } from "lucide-react
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BookCard from "@/components/BookCard";
+import { useRatingContext } from "@/components/contexts/RatingContext";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("shelves");
   const {recentlyRead, isOnShelf, addToShelf, removeFromShelf} = useShelfContext();
+  const {ratings, pendingInsert} = useRatingContext();
+  const [showAllTopBooks, setShowAllTopBooks] = useState(false);
+
+
+  const topBooks = [];
+  ["love", "like", "hate"].forEach((category) => {
+    const sorted = Object.values(ratings)
+      .filter((r) => r.category === category)
+      .sort((a, b) => a.position - b.position);
+
+    topBooks.push(...sorted); // don't limit here
+  });
+
+  const displayedBooks = showAllTopBooks ? topBooks : topBooks.slice(0, 5);
+
+  const ViewAllSorted = () => {
+    return(
+    <div>
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        {topBooks.map((rating, index) => (
+          <div key={rating.book.id} className="relative">
+            <span className="absolute -top-2 -left-2 bg-dewey-green text-white text-xs px-2 py-1 rounded-full z-10">
+              #{index + 1}
+            </span>
+            <BookCard
+              id={rating.book.id}
+              cover={rating.book.cover}
+              title={rating.book.title}
+              author={rating.book.author}
+              rating={rating.position}
+              liked={false}
+              isOnShelf={isOnShelf(rating.book.title)}
+              onToggleShelf={() =>
+                isOnShelf(rating.book.title)
+                  ? removeFromShelf(rating.book.title)
+                  : addToShelf(rating.book)
+              }
+            />
+          </div>
+        ))}
+        </div>
+    </div>
+    )
+  };
+
+  const dnfBooks = Object.values(ratings)
+    .filter(r => r.category === "dnf")
+    .map(r => r.book);
+
   const userData = {
     username: "bookworm_emma",
     name: "Emma Thompson",
@@ -56,7 +106,14 @@ const Profile = () => {
       count: 8,
       books: recentlyRead.slice(0, 3).reverse(),
     },
+    {
+      name: "Didn't Finish",
+      count: dnfBooks.length,
+      books: dnfBooks
+    }
   ];
+
+  
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -220,7 +277,46 @@ const Profile = () => {
           <div>
             {activeTab === "shelves" && (
               <div>
-                {/* Recently Read */}
+              <div className="mb-10">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="font-serif text-2xl font-bold">Your Top Books</h2>
+                  <button
+                    className="text-dewey-green hover:text-dewey-light-green text-sm font-medium"
+                    onClick={() => setShowAllTopBooks((prev) => (!prev))}
+                  >
+                    {showAllTopBooks ? "Show Only Top 5" : "View All"}
+                  </button>
+                </div>
+          
+              
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                    {displayedBooks.map((rating, index) => (
+                      <div key={rating.book.id} className="relative">
+                        <span className="absolute -top-2 -left-2 bg-dewey-green text-white text-xs px-2 py-1 rounded-full z-10">
+                          #{index + 1}
+                        </span>
+                        <BookCard
+                          id={rating.book.id}
+                          cover={rating.book.cover}
+                          title={rating.book.title}
+                          author={rating.book.author}
+                          rating={rating.position}
+                          liked={false}
+                          isOnShelf={isOnShelf(rating.book.title)}
+                          onToggleShelf={() =>
+                            isOnShelf(rating.book.title)
+                              ? removeFromShelf(rating.book.title)
+                              : addToShelf(rating.book)
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+              </div>
+
+
+
+                {/* Your Next Read */}
                 <div className="mb-10">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="font-serif text-2xl font-bold">Your Next Read</h2>
@@ -228,7 +324,7 @@ const Profile = () => {
                       View All
                     </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     {recentlyRead.map((book, index) => (
                       <BookCard
                         key={index}
@@ -243,11 +339,12 @@ const Profile = () => {
                           isOnShelf(book.title)
                             ? removeFromShelf(book.title)
                             : addToShelf(book)
-  }
+                        }
                       />
                     ))}
                   </div>
                 </div>
+                
                 
                 {/* Book Lists */}
                 <div>
