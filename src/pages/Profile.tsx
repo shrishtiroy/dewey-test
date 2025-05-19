@@ -90,6 +90,7 @@ const Profile = () => {
   const handleAddToShelf = (book) => {
     setNextRead((prev) => [{ ...book, rating: 0, liked: false }, ...prev]);
   };
+  const [popupVisible, setPopupVisible] = useState({});
   const bookLists = [
     {
       name: "Want to Read",
@@ -357,7 +358,7 @@ const Profile = () => {
                           <span className="text-gray-500 text-sm">{list.count} books</span>
                         </div>
                         <div className="flex mb-4">
-                          {list.books.map((book, i) => (
+                          {list.books.slice(0, 5).map((book, i) => (
                             <img
                               key={i}
                               src={book.cover}
@@ -365,10 +366,53 @@ const Profile = () => {
                               className="w-20 h-28 object-cover rounded-md shadow-md mr-3 last:mr-0"
                             />
                           ))}
-                        </div>
-                        <button className="text-sm font-medium text-dewey-green hover:text-dewey-light-green transition-colors">
+                        <button
+                          className="text-sm font-medium text-dewey-green hover:text-dewey-light-green transition-colors"
+                          onClick={() => {
+                            setPopupVisible((prev) => ({
+                              ...prev,
+                              [index]: !prev[index],
+                            }));
+                          }}
+                        >
                           View List
                         </button>
+                        {popupVisible[index] && (
+                          <div
+                            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                          >
+                            <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-md">
+                              <h3 className="font-serif text-xl font-medium mb-4">{list.name}</h3>
+                              <div className="grid grid-cols-1 gap-4">
+                                {list.books.map((book, i) => (
+                                  <div key={i} className="flex items-center">
+                                    <img
+                                      src={book.cover}
+                                      alt={book.title}
+                                      className="w-12 h-16 object-cover rounded-md shadow-md mr-3"
+                                    />
+                                    <div>
+                                      <h4 className="font-medium">{book.title}</h4>
+                                      <p className="text-sm text-gray-600">{book.author}</p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              <button
+                                className="mt-4 btn-secondary w-full"
+                                onClick={() => {
+                                  setPopupVisible((prev) => ({
+                                    ...prev,
+                                    [index]: false,
+                                  }));
+                                }}
+                              >
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        </div>
                       </div>
                     ))}
                     <div className="card flex flex-col items-center justify-center text-center h-48">
