@@ -1,4 +1,4 @@
-# Bookmark 
+# Dewey 
 
 A book social media web app built with React + Vite + Tailwind CSS. It uses the Open Library API for books and allows users to rate and rank favorites with pairwise comparisons (like how Belli ranks restaurants), create fun reading lists lists (shelves), and track yearly reading progress.
 
